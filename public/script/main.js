@@ -358,8 +358,6 @@ var globalObj = {
 		} else {
 			index = this.getLastIndex(!config.direction)[0];
 		}
-		//this.createScript(url + index + '&b=' + currentLabel + '&mode=' + (direction ? 'up' : 'down') + '&t=' + this.getLastIndex(direction)[1] + '&callback=renderListCallback');
-		//sendRequest("/getType?chanel=" + encodeURIComponent(currentLabel), renderListCallback);
 		this.createScript('http://10.134.30.154:10178/?mid=test&cnt=10&type=' + encodeURIComponent(currentLabel) + '&callback=renderListCallback');
 	},
 	//
@@ -390,17 +388,6 @@ var globalObj = {
 				//currentLabelList.push(urls);
 			}
 			currentLabelList.time = config.currentTime;
-			// setTimeout(function() { //link列表存入本地
-			// 	info = {};
-			// 	info[config.currentLabel] = [];
-			// 	for (var i = 0; i < currentLabelList.data.length; i++) {
-			// 		var item = currentLabelList.data[i];
-			// 		for (var j = 0; j < item.length; j++) {
-			// 			info[config.currentLabel].push(item[j].url);
-			// 		}
-			// 	}
-			// 	localStorage.setItem('info', JSON.stringify(info));
-			// }, 0);
 		}
 	},
 	init: function() {
@@ -436,8 +423,7 @@ var globalObj = {
 		}
 		self.moreList();
 		$('.labelChange') && $('.labelChange').addEventListener('click', function(e) {
-			var label = e.target.parentNode,
-				selected = $('.selected');
+			var label = e.target.parentNode;
 			if (label.nodeName !== 'LI') return; //切内容
 			opeInfo.change = true;
 			opeInfo.direction = false;
@@ -447,7 +433,7 @@ var globalObj = {
 			emptyElement(self.eleData.sgList);
 			label.scrollIntoView();
 			// location.hash = e.target.getAttribute('data-tag');
-			history.pushState({}, undefined, location.host + '#' + e.target.getAttribute('data-tag'));
+			history.pushState({page: e.target.getAttribute('data-tag')||"汽车迷"}, undefined, 'http://' + location.host + '/#' + e.target.getAttribute('data-tag'));
 			config.currentLabel = e.target.getAttribute("data-tag").toLowerCase();
 			config.listArray[config.currentLabel] = config.listArray[config.currentLabel] || {};
 			currentLabelList = config.listArray[config.currentLabel];
@@ -458,6 +444,10 @@ var globalObj = {
 				self.moreList(true);
 			}
 			label.className += 'current';
+		});
+		window.addEventListener('popstate', function(e){
+			console.log(e);
+			self.channelChange.call(self,e.state.page);
 		});
 		$('.load-more') && window.addEventListener('scroll', function() {
 			self.scrollUpdateDelay.call(self);
@@ -471,6 +461,32 @@ var globalObj = {
 			}
 		});
 		//self.pullToRefresh.init.call(self);
+	},
+	channelChange: function(channel){
+		var label = $('[data-tag=' + channel + ']') || e.target.parentNode;
+		var self = this;
+		var opeInfo = self.opeInfo;
+		var config = self.config;
+		var channelText = location.hash.slice(1);
+		opeInfo.change = true;
+		opeInfo.direction = false;
+		opeInfo.num = 0;
+		emptyElement($('.load-more'));
+		$('.selected .current') && ($('.selected .current').className = '');
+		emptyElement(self.eleData.sgList);
+		label.scrollIntoView();
+		// location.hash = e.target.getAttribute('data-tag');
+		history.pushState({page: channelText}, undefined, 'http://' + location.host + '/#' + channelText);
+		config.currentLabel = channelText.toLowerCase();
+		config.listArray[config.currentLabel] = config.listArray[config.currentLabel] || {};
+		currentLabelList = config.listArray[config.currentLabel];
+		if (currentLabelList.length) { //已缓存
+			var renderObj = currentLabelList[0].length < 10 ? currentLabelList[0].concat(currentLabelList[1]) : currentLabelList[0];
+			self.renderList(renderObj, true);
+		} else {
+			self.moreList(true);
+		}
+		label.className += 'current';
 	},
 	scrollTime: new Date().getTime(),
 	scrollUpdate: function(e) {
