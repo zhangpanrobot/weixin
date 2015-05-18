@@ -278,11 +278,15 @@ ul.article a:visited h2{
   -webkit-background-size: cover;
 }
 .count{
-	position: absolute;
+  position: absolute;
+  width: 75%;
   bottom: 17px;
   color: #b2b2b2;
   font-size: 12px;
   left: 0;
+}
+.count .source{
+  float: right;
 }
 .count.spe{
   position: relative;

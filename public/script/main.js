@@ -1,24 +1,24 @@
 function sendRequest(url, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            currentTime = this.getResponseHeader('Date');
-            callback(xhr.responseText);
-        } else if (xhr.readyState === 4 && xhr.status !== 200) {
-            callback({
-                "fail": true,
-                "data": xhr.responseText
-            });
-        }
-    }
-    xhr.onerror = function() {
-        callback({
-            "fail": true,
-            "data": xhr.responseText
-        });
-    };
-    xhr.open('GET', url, true);
-    xhr.send();
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState === 4 && xhr.status === 200) {
+			currentTime = this.getResponseHeader('Date');
+			callback(xhr.responseText);
+		} else if (xhr.readyState === 4 && xhr.status !== 200) {
+			callback({
+				"fail": true,
+				"data": xhr.responseText
+			});
+		}
+	}
+	xhr.onerror = function() {
+		callback({
+			"fail": true,
+			"data": xhr.responseText
+		});
+	};
+	xhr.open('GET', url, true);
+	xhr.send();
 }
 
 //默认背景图替换
@@ -68,7 +68,6 @@ var imageLoaderManager = (function() {
 	};
 })();
 
-
 function $(selector, context) {
 	return (context || document).querySelector(selector);
 }
@@ -79,10 +78,6 @@ function $$(selector, context) {
 
 function renderListCallback(data) {
 	return globalObj.renderListCallback(data);
-}
-
-function updateGeted(data) {
-	return globalObj.updateGeted(data);
 }
 
 function removeElement(ele) {
@@ -105,64 +100,11 @@ function removeClass(ele, str) {
 	ele.classList.remove(str);
 }
 
-function getList(type){
-	sendRequest('/getType?type=' + type, function(data){
-		console.log(data);
-	});
-}
-
 //视口大小用类控制
 function setStyleEle(viewWidth, viewHeight) {
 	var style = document.getElementsByTagName('style')[0];
 	style.innerText = '.viewHeight:{' + viewHeight + 'px;}.viewWidth:{' + viewWidth + '};';
 }
-
-//默认背景图替换
-var imageLoaderHelper = function(flag, img, id, src) {
-	if (flag) img.dataset.src = '';
-	src = flag ? src : defaultSRCMap[id];
-	switch (id) {
-		case 'news':
-			img.style.cssText = 'background: transparent url(' + src + ') no-repeat center top; background-size: cover;';
-			break;
-		default:
-			img.src = src;
-			break;
-	}
-};
-
-var defaultSRCMap = {
-	'news': './public/img/default.png'
-};
-
-var imageLoaderManager = (function() {
-	var list = [];
-
-	function load(src, cb) {
-		var cb = typeof cb === 'function' ? cb : function() {};
-		var img = document.createElement('img');
-		img.onload = function() {
-			img.onerror = img.onload = null;
-			cb(true);
-		};
-		img.onerror = function() {
-			img.onerror = img.onload = null;
-			cb(false);
-			list.push([src, cb]);
-		};
-		img.src = src;
-	}
-	window.addEventListener('online', function() {
-		var item, stack = list.slice(0);
-		list.length = 0;
-		while (item = stack.pop()) {
-			load(item[0], item[1]);
-		}
-	}, false);
-	return {
-		load: load
-	};
-})();
 
 var globalObj = {
 	dbody: document.body,
@@ -174,12 +116,7 @@ var globalObj = {
 	},
 	opeInfo: {
 		change: false,
-		direction: false, //方向
-		num: 0
-	},
-	keyWord: {
-		"hot": "热门",
-		"editor": "精品"
+		direction: false
 	},
 	guid: (function() {
 		function s4() {
@@ -218,50 +155,6 @@ var globalObj = {
 	loadMoreText: function(bool) {
 		$('.load-more').innerHTML = bool ? '<span>正在加载...</span>' : '';
 	},
-	//list页时间转换
-	timeFormat: function(time) {
-		time = +time <= 0 ? 0 : time;
-		if (0 == time) {
-			return '刚刚';
-		}
-		var day = 86400000;
-		var hour = 3600000;
-		var minute = 60000;
-		var totalDay = parseInt(time / day);
-		var totalHour = parseInt((time % day) / hour);
-		var totalMinu = parseInt((time % day % hour) / minute);
-		return totalDay ? totalDay + '天前' : '' + (totalHour ? totalHour + '小时' : '') + (totalHour ? '' : (totalMinu ? totalMinu : '0') + '分钟') + '前';
-	},
-	//详情页时间转换
-	dateFormat: function(time) {
-		time = new Date(time);
-		var date = dateForm(time.getDate() - 1, true);//日期减1
-		var month = dateForm(time.getMonth() + 1);//月份加1
-		var hour = dateForm(time.getHours());
-		var minute = dateForm(time.getMinutes());
-		function dateForm(item, bool) {
-			item = item + (bool ? 1 : '') + '';
-			item = item.length < 2 ? '0' + item : item;
-			return item;
-		}
-		return month + '-' + date + '  ' + hour + ':' + minute;
-	},
-	//三个大layer切换
-	layerSwitch: function(sup, sub) {
-		removeClass(sup, 'sg-hide');
-		addClass(sub, 'sg-hide');
-		sub.style.height = this.viewHeight + 'px';
-	},
-	listLoadingView: function() {
-		var loadingView = document.createElement('div');
-		loadingView.className = 'sg-list-loading';
-		loadingView.style.cssText = 'height:' + (self.viewHeight - self.labelHeight) + 'px;top:' + (self.labelHeight + 2) + 'px';
-		self.eleData.container.appendChild(loadingView);
-		//this.eleData.container.innerHTML += '<div class="default-loading"></div>';
-	},
-	deleteLoadingView: function() {
-		removeElement($('.default-loading'));
-	},
 	//渲染频道
 	renderSelected: function() {
 		var str = '';
@@ -286,7 +179,7 @@ var globalObj = {
 			}
 		});
 		$('.selected').innerHTML = str;
-		if(currentDeleted) {
+		if (currentDeleted) {
 			$('.selected li').className = 'current';
 		}
 		//重新初始化iScroll
@@ -309,7 +202,7 @@ var globalObj = {
 			for (var i = 0; i < obj.length; i++) {
 				var item = obj[i];
 				if (!item) continue;
-				tempStr += '<li><a target="_blank" href=' + item.link + '><div class="thumb" style="background: rgb(224, 224, 224) url(./public/img/default.png) no-repeat center center;background-size: 35px 30px;" data-src="' + item.img + '"></div><h2>' + item.title + '</h2><span class="count"><i class="read-num">' + item.read_num + '人阅读</i></span></a></li>';
+				tempStr += '<li><a href=' + item.link + '><div class="thumb" style="background: rgb(224, 224, 224) url(./public/img/default.png) no-repeat center center;background-size: 35px 30px;" data-src="' + item.img + '"></div><h2>' + item.title + '</h2><span class="count"><i class="read-num">' + item.read_num + '人阅读</i><i class="source">' + item.source + '</i></span></a></li>';
 			}
 			setTimeout(function() {
 				var images = $$('.thumb', ul);
@@ -352,12 +245,7 @@ var globalObj = {
 		var index;
 		currentLabel = label || decodeURIComponent(config.currentLabel);
 		this.listTime = new Date().getTime();
-		url = num ? config.baseUrl.replace(/count=20/, 'count=' + num) : config.baseUrl;
-		if (currentLabel == '汽车迷') {
-			index = config.listArray[config.currentLabel].data && config.listArray[config.currentLabel].data.length;
-		} else {
-			index = this.getLastIndex(!config.direction)[0];
-		}
+		url = config.baseUrl;
 		this.createScript('http://10.134.30.154:10178/?mid=test&cnt=10&type=' + encodeURIComponent(currentLabel) + '&callback=renderListCallback');
 	},
 	//
@@ -366,8 +254,8 @@ var globalObj = {
 		var config = this.config;
 		var urls;
 		//data = JSON.parse(data);
-		currentLabelList = config.listArray[config.currentLabel]||{};
-		currentLabelList.data = currentLabelList.data||[];		
+		currentLabelList = config.listArray[config.currentLabel] || {};
+		currentLabelList.data = currentLabelList.data || [];
 		if (!data.status || !data.result.article_list.length) {
 			$('.load-more').innerHTML = '<span>童鞋,表淘气,没有更多咯^_^</span>';
 			return;
@@ -377,7 +265,7 @@ var globalObj = {
 			config.currentTime = (+data.timestamp) * 1000;
 			this.renderList(urls, opeInfo.change, opeInfo.direction);
 			if (opeInfo.direction) {
-				this.showUp(opeInfo.num);
+				this.showUp(urls.length);
 				this.pullDownStyle();
 				//下拉, 下拉用不同的方法
 				currentLabelList.data.unshift(urls);
@@ -433,7 +321,9 @@ var globalObj = {
 			emptyElement(self.eleData.sgList);
 			label.scrollIntoView();
 			// location.hash = e.target.getAttribute('data-tag');
-			history.pushState({page: e.target.getAttribute('data-tag')||"汽车迷"}, undefined, 'http://' + location.host + '/#' + e.target.getAttribute('data-tag'));
+			history.pushState({
+				page: e.target.getAttribute('data-tag') || "汽车迷"
+			}, undefined, 'http://' + location.host + '/#' + e.target.getAttribute('data-tag'));
 			config.currentLabel = e.target.getAttribute("data-tag").toLowerCase();
 			config.listArray[config.currentLabel] = config.listArray[config.currentLabel] || {};
 			currentLabelList = config.listArray[config.currentLabel];
@@ -445,9 +335,9 @@ var globalObj = {
 			}
 			label.className += 'current';
 		});
-		window.addEventListener('popstate', function(e){
+		window.addEventListener('popstate', function(e) {
 			console.log(e);
-			self.channelChange.call(self,e.state.page);
+			self.channelChange.call(self, e.state.page);
 		});
 		$('.load-more') && window.addEventListener('scroll', function() {
 			self.scrollUpdateDelay.call(self);
@@ -460,9 +350,9 @@ var globalObj = {
 				toTopDistance = 0;
 			}
 		});
-		//self.pullToRefresh.init.call(self);
+		self.pullToRefresh.init.call(self);
 	},
-	channelChange: function(channel){
+	channelChange: function(channel) {
 		var label = $('[data-tag=' + channel + ']') || e.target.parentNode;
 		var self = this;
 		var opeInfo = self.opeInfo;
@@ -476,7 +366,9 @@ var globalObj = {
 		emptyElement(self.eleData.sgList);
 		label.scrollIntoView();
 		// location.hash = e.target.getAttribute('data-tag');
-		history.pushState({page: channelText}, undefined, 'http://' + location.host + '/#' + channelText);
+		history.pushState({
+			page: channelText
+		}, undefined, 'http://' + location.host + '/#' + channelText);
 		config.currentLabel = channelText.toLowerCase();
 		config.listArray[config.currentLabel] = config.listArray[config.currentLabel] || {};
 		currentLabelList = config.listArray[config.currentLabel];
@@ -525,8 +417,7 @@ var globalObj = {
 	},
 	showUp: function(num) {
 		var callbackMsg = $('#callback-msg');
-		num = num > 10 ? 10 : num;
-		callbackMsg.innerText = arguments[0] ? '为您汽车迷' + num + '篇文章' : '暂无新汽车迷';
+		callbackMsg.innerText = '为您推荐' + num + '篇文章';
 		setTimeout(function() {
 			callbackMsg.style.opacity = '1';
 		}, 500);
@@ -538,9 +429,7 @@ var globalObj = {
 		}, 1500);
 	},
 	getUpdate: function(currentLabel, lastindex) {
-		var baseUrl = 'http://discover.ie.sogou.com/discover_agent?h=' + this.uuid + '&cmd=getupdatenumber&phone=1&b=' + currentLabel + '&lastindex=' + lastindex + '&callback=updateGeted';
-		//this.createScript(baseUrl);
-		sendRequest("/getType?chanel=" + encodeURIComponent(currentLabel), renderListCallback);
+		this.moreList(false, true);
 	},
 	pullDownStyle: function() {
 		//setTimeout里的调用
@@ -551,30 +440,10 @@ var globalObj = {
 	updateGeted: function(data) {
 		var opeInfo = this.opeInfo;
 		data = data.app_cmd[0].cmd[0].news_app_info[0];
-		if (data.update_number) {
 			opeInfo.change = false;
 			opeInfo.direction = true;
-			opeInfo.num = data.update_number;
-			var refreshNum = data.update_number > 10 ? 10 : data.update_number;
-			this.moreList(false, true, refreshNum);
-		} else {
-			this.pingback('updateFail', this.uuid, {
-				currentLabel: this.config.currentLabel
-			});
-			this.showUp();
-			setTimeout(this.pullDownStyle, 300);
-		}
+			this.moreList(false, true);
 		this.toGetUpdate = false;
-	},
-	getLastIndex: function(bool) { //true时取最大值
-		//注意, 这里是引用值, 直接用slice会改变原有对象
-		var currentList = JSON.parse(JSON.stringify(this.config.listArray[this.config.currentLabel].data||({})));
-		if (currentList.length) {
-			var currentItem = !bool ? currentList.shift().shift() : currentList.pop().pop();
-			return [currentItem.index, currentItem.publish_time];
-		} else {
-			return [undefined, 0];
-		}
 	},
 	pullToRefresh: {
 		init: function() {
@@ -605,7 +474,7 @@ var globalObj = {
 					if (pageY - touchY > 60) {
 						self.toGetUpdate = true;
 						addClass(pulldownMsgIcon, 'icon-arrow-up');
-						pulldownMsgText.innerText = '放开即可汽车迷'
+						pulldownMsgText.innerText = '释放刷新';
 					} else {
 						removeClass(pulldownMsgIcon, 'icon-arrow-up');
 						pulldownMsgText.innerText = '下拉刷新';
@@ -621,9 +490,9 @@ var globalObj = {
 					if (!self.toGetUpdate) {
 						self.pullDownStyle();
 					} else {
-						pulldownMsgText.innerText = '正在汽车迷';
+						pulldownMsgText.innerText = '正在推荐';
 						addClass(pulldownMsgIcon, 'icon-refresh');
-						self.getUpdate(self.config.currentLabel, self.getLastIndex(true)[0]);
+						self.getUpdate();
 						self.pingback('update', self.uuid, {
 							currentLabel: self.config.currentLabel
 						});
