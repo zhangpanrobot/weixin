@@ -64,8 +64,8 @@ img{
 .three-quarters:not(:required) {
   display: inline-block;
   overflow: hidden;
-  width: 40px;
-  height: 40px;
+  width: 26px;
+  height: 26px;
   position: absolute;
   margin: auto;
   left: 0;
@@ -78,7 +78,7 @@ img{
   -ms-animation: three-quarters 1250ms infinite linear;
   -o-animation: three-quarters 1250ms infinite linear;
   animation: three-quarters 1250ms infinite linear;
-  border: 2px solid #3388ee;
+  border: 1px solid #06bf04;
   border-right-color: transparent;
   border-radius: 20px;
   box-sizing: border-box;
@@ -122,9 +122,8 @@ img{
 }
 .sg-list{
   padding: 0 10px;
-  border-top: 1px solid rgb(220, 220, 220);
-	margin-top: 48px;
-  background-color: rgb(245, 245, 245);
+	margin-top: 38px;
+  background-color: #fff;
 }
 .labelChange{
 	position: absolute;
@@ -135,50 +134,48 @@ img{
 	-webkit-user-select: none;
 	-webkit-tap-highlight-color: transparent;
   overflow:hidden;
-  background-color: #fff;
   transition: all .3s;
-  box-shadow: 0 1px 1px rgba(238, 238, 238, .5);
+  background-color: #f6f6f6;
+  border-bottom: 1px solid #dbdbdb;
 }
 .toSelect{
-	display: none;
+  display: none;
 }
 .selected{
   display: inline-block;
   position: relative;
   margin: 0 5px;
   white-space: nowrap;
-  padding-right: 50px;
+  background-color: #f6f6f6;
+  padding-right: 20px;
 }
 .selected li{
-	display: inline-block;
+  display: inline-block;
   padding: 0 5px;
   margin: 0 5px;
   text-align: center;
-  line-height: 46px;
-  border-bottom: 2px solid transparent;
+  line-height: 38px;
 }
 .selected a, .selected a:hover, .toSelect span{
 	display: block;
-	font-size: 19px;
+	font-size: 16px;
   word-spacing: 2px;
-    font-weight: 200;
-    color:#8d8d8d;
-}
-.selected .current{
-    border-bottom-color: rgb(76, 145, 246);
+  font-weight: 200;
+  color:#6b6b6b;
 }
 .selected .current a{
-    color: rgb(76, 145, 246);
+    color: #06bf04;
 }
 .article h2{
-	font-size: 16px;
-    font-weight: 200;
+	font-size: 17px;
+  font-weight: 200;
+  line-height: 21px;
 	margin:5px 0 0 0;
-
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  color: #333;
 }
 .sg-news{
   height: 100%;
@@ -256,22 +253,16 @@ ul.article li{
 ul.article a{
   color: #333;
   display: block;
-  padding: 15px 0;
+  padding: 15px 5px;
   overflow: hidden;
-  border-bottom: 1px solid rgb(220, 220, 220);
+  border-bottom: 1px solid #e5e5e5;
   -webkit-tap-highlight-color: rgba(0,0,0,.1);
-}
-ul.article a.visitedLink h2{
-    color: #aaa;
-}
-ul.article a:visited h2{
-    color: #aaa!important;
 }
 .thumb{
 	float: right;
   width: 25%;
   padding-top: 25%;
-  margin-left: 10px;
+  margin-left:15px;
   background-size: cover;
   background-position: 50% 50%;
   background-repeat: no-repeat;
@@ -282,7 +273,7 @@ ul.article a:visited h2{
   width: 75%;
   bottom: 17px;
   color: #b2b2b2;
-  font-size: 12px;
+  font-size: 13px;
   left: 0;
 }
 .count .source{
@@ -291,6 +282,9 @@ ul.article a:visited h2{
 .count.spe{
   position: relative;
   bottom: 0;
+}
+.count .read-num{
+  margin-left: 5px;
 }
 .count i{
 	font-style: normal;
@@ -541,6 +535,10 @@ ul.article a:visited h2{
 #pulldown-msg .icon-arrow-up{
     transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
+}
+#pulldown-msg .icon-arrow-seccuss{
+  background-image: url(img/success.png);
+  transform: rotate(0deg);
 }
 @keyframes myfirst
 {

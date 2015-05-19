@@ -202,7 +202,7 @@ var globalObj = {
 			for (var i = 0; i < obj.length; i++) {
 				var item = obj[i];
 				if (!item) continue;
-				tempStr += '<li><a href=' + item.link + '><div class="thumb" style="background: rgb(224, 224, 224) url(./public/img/default.png) no-repeat center center;background-size: 35px 30px;" data-src="' + item.img + '"></div><h2>' + item.title + '</h2><span class="count"><i class="read-num">' + item.read_num + '人阅读</i><i class="source">' + item.source + '</i></span></a></li>';
+				tempStr += '<li><a href=' + item.link + '><div class="thumb" style="background: rgb(224, 224, 224) url(./public/img/default.png) no-repeat center center;background-size: 35px 30px;" data-src="' + item.img + '"></div><h2>' + item.title + '</h2><span class="count"><i class="read-num">阅读 ' + item.read_num + '</i><i class="source">' + item.source + '</i></span></a></li>';
 			}
 			setTimeout(function() {
 				var images = $$('.thumb', ul);
@@ -416,26 +416,51 @@ var globalObj = {
 		}
 	},
 	showUp: function(num) {
-		var callbackMsg = $('#callback-msg');
-		callbackMsg.innerText = '为您推荐' + num + '篇文章';
-		setTimeout(function() {
-			callbackMsg.style.opacity = '1';
-		}, 500);
-		setTimeout(function() {
-			callbackMsg.style.opacity = '0';
-			setTimeout(function() {
-				callbackMsg.innerText = '暂无新汽车迷';
-			}, 500);
-		}, 1500);
+		// var callbackMsg = $('#callback-msg');
+		// callbackMsg.innerText = '为您推荐' + num + '篇文章';
+		// setTimeout(function() {
+		// 	callbackMsg.style.opacity = '1';
+		// }, 500);
+		// setTimeout(function() {
+		// 	callbackMsg.style.opacity = '0';
+		// 	setTimeout(function() {
+		// 		callbackMsg.innerText = '暂无新汽车迷';
+		// 	}, 500);
+		// }, 1500);
+		// var pulldownMsg = $('#pulldown-msg'),
+		// 	pulldownMsgIcon = $('#pulldown-msg i'),
+		// 	pulldownMsgText = $('#pulldown-msg span');
+
+		// 	addClass(pulldownMsgIcon, 'icon-arrow-seccuss');
+		// 	pulldownMsgText.innerText = '刷新成功';
+
+		// 	setTimeout(function(){
+		// 		removeClass(pulldownMsgIcon, 'icon-arrow-seccuss');
+		// 		pulldownMsgText.innerText = '下拉刷新';
+		// 	}, 500);
 	},
 	getUpdate: function(currentLabel, lastindex) {
 		this.moreList(false, true);
 	},
 	pullDownStyle: function() {
 		//setTimeout里的调用
-		globalObj.eleData.sgList.style.cssText = '-webkit-transition: all .3s ease;transition: all .3s ease;-webkit-transform: translate3d(0, 0, 0);transform: translate3d(0, 0, 0)';
-		$('#pulldown-msg').style.cssText = '-webkit-transition: all .3s ease;transition: all .3s ease;-webkit-transform: translate3d(0, 0, 0);transform: translate3d(0, 0, 0)';
-		removeClass($('#pulldown-msg i'), 'icon-refresh');
+
+
+			var pulldownMsg = $('#pulldown-msg'),
+			pulldownMsgIcon = $('#pulldown-msg i'),
+			pulldownMsgText = $('#pulldown-msg span');
+			removeClass(pulldownMsgIcon, 'icon-refresh');
+			addClass(pulldownMsgIcon, 'icon-arrow-seccuss');
+			pulldownMsgText.innerText = '刷新成功';
+
+			setTimeout(function(){
+			globalObj.eleData.sgList.style.cssText = '-webkit-transition: all .3s ease;transition: all .3s ease;-webkit-transform: translate3d(0, 0, 0);transform: translate3d(0, 0, 0)';
+			pulldownMsg.style.cssText = '-webkit-transition: all .3s ease;transition: all .3s ease;-webkit-transform: translate3d(0, 0, 0);transform: translate3d(0, 0, 0)';
+			}, 300);
+			setTimeout(function(){
+				removeClass(pulldownMsgIcon, 'icon-arrow-seccuss');
+				pulldownMsgText.innerText = '下拉刷新';
+			}, 500);
 	},
 	updateGeted: function(data) {
 		var opeInfo = this.opeInfo;
@@ -490,7 +515,7 @@ var globalObj = {
 					if (!self.toGetUpdate) {
 						self.pullDownStyle();
 					} else {
-						pulldownMsgText.innerText = '正在推荐';
+						pulldownMsgText.innerText = '正在刷新';
 						addClass(pulldownMsgIcon, 'icon-refresh');
 						self.getUpdate();
 						self.pingback('update', self.uuid, {
