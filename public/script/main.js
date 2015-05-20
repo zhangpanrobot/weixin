@@ -447,8 +447,8 @@ var globalObj = {
 
 
 			var pulldownMsg = $('#pulldown-msg'),
-			pulldownMsgIcon = $('#pulldown-msg i'),
-			pulldownMsgText = $('#pulldown-msg span');
+			pulldownMsgIcon = $('i', pulldownMsg),
+			pulldownMsgText = $('span', pulldownMsg);
 			removeClass(pulldownMsgIcon, 'icon-refresh');
 			addClass(pulldownMsgIcon, 'icon-arrow-seccuss');
 			pulldownMsgText.innerText = '刷新成功';
