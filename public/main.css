@@ -734,3 +734,6 @@ figure{
   background: url(img/return.png) right 0 no-repeat;
   background-size: cover;
 }
+a:visited h2{
+  color: #acacac;
+}
